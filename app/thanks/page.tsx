@@ -15,11 +15,14 @@ export default function ThanksPage() {
   return (
     <main id="main" className="thanks">
       <div className="wrap">
-        <p className="kicker">Request received</p>
         <h1 className="display">Got it.</h1>
         <p>
-          We&apos;ll email a payment link and your answer within 24 hours. Check
-          spam if you don&apos;t see it — the first email from a new sender
+          Next email is a payment link if we can check the route — or a note if
+          we can&apos;t, in which case you pay nothing. After you pay, the PDF
+          arrives within 24 hours.
+        </p>
+        <p>
+          Check spam if you don&apos;t see it. The first email from a new sender
           often lands there.
         </p>
         <Link className="btn btn--ghost" href="/">

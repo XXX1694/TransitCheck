@@ -8,12 +8,10 @@ export function SiteHeader() {
         <Link href="/" className="wordmark">
           TransitCheck
         </Link>
-        <p className="site-header__meta">
-          <span>DOC TC-24H</span>
-          <span aria-hidden="true">·</span>
-          <span>ROUTE VERDICT</span>
-        </p>
-        <CheckCta className="btn btn--ghost site-header__cta" />
+        <p className="site-header__meta">Human transit-visa check</p>
+        <CheckCta className="btn btn--ghost site-header__cta">
+          Check a route
+        </CheckCta>
       </div>
     </header>
   );

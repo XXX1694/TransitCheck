@@ -7,7 +7,7 @@ import "./globals.css";
 
 const unbounded = Unbounded({
   subsets: ["cyrillic", "latin"],
-  weight: ["600", "700"],
+  weight: ["700"],
   display: "swap",
   variable: "--font-unbounded",
 });
@@ -21,7 +21,7 @@ const onest = Onest({
 
 const jetbrains = JetBrains_Mono({
   subsets: ["cyrillic", "latin"],
-  weight: ["400", "500"],
+  weight: ["500"],
   display: "swap",
   variable: "--font-jetbrains",
 });

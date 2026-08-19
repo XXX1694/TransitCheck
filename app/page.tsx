@@ -323,7 +323,6 @@ export default function Home() {
                   Дата и время проверки на документе
                 </li>
               </ol>
-              <div className="receipt-barcode" aria-hidden="true" />
             </div>
             <p>
               Если из-за ошибки в отчёте вас не посадили на рейс — возвращаем $

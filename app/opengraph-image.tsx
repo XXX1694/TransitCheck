@@ -1,65 +1,62 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 export const alt =
   "С рейса снимают не из-за визы в конечную страну, а из-за транзитной. TransitCheck, $12.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-async function loadFontSubset(family: string, weight: number, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${family.replaceAll(" ", "+")}:wght@${weight}&text=${encodeURIComponent(text)}`;
-  const css = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    },
-  }).then((response) => response.text());
+type OgFont = {
+  name: string;
+  data: ArrayBuffer;
+  weight: 400 | 500 | 700;
+};
 
-  const match = css.match(/src: url\(([^)]+)\)/);
-  if (!match) {
-    throw new Error(`Could not subset ${family}`);
+async function loadFontFile(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Font ${url} ${response.status}`);
   }
-
-  return fetch(match[1]).then((response) => response.arrayBuffer());
+  return response.arrayBuffer();
 }
 
 export default async function OpenGraphImage() {
   const headline =
     "С рейса снимают не из-за визы в конечную страну, а из-за транзитной";
-  const meta = "TC  РАЗБОР ТРАНЗИТА  $12  24Ч";
-  const codes = "ALA  SIN 9Ч  KUL";
   const stamp = "ВИЗА НУЖНА";
-  const text = `${headline} ${meta} ${codes} ${stamp} P<KAZ`;
 
-  let fonts: { name: string; data: ArrayBuffer; weight: number }[] = [];
+  let fonts: OgFont[] = [];
 
   try {
-    const [display, mono] = await Promise.all([
-      loadFontSubset("Unbounded", 700, text),
-      loadFontSubset("JetBrains Mono", 500, text),
+    const [unboundedCyr, unboundedLat, monoCyr, monoLat] = await Promise.all([
+      loadFontFile(
+        "https://cdn.jsdelivr.net/fontsource/fonts/unbounded@latest/cyrillic-700-normal.ttf",
+      ),
+      loadFontFile(
+        "https://cdn.jsdelivr.net/fontsource/fonts/unbounded@latest/latin-700-normal.ttf",
+      ),
+      loadFontFile(
+        "https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/cyrillic-500-normal.ttf",
+      ),
+      loadFontFile(
+        "https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/latin-500-normal.ttf",
+      ),
     ]);
     fonts = [
-      { name: "Unbounded", data: display, weight: 700 },
-      { name: "JetBrains Mono", data: mono, weight: 500 },
+      { name: "Unbounded", data: unboundedCyr, weight: 700 },
+      { name: "Unbounded", data: unboundedLat, weight: 700 },
+      { name: "JetBrains Mono", data: monoCyr, weight: 500 },
+      { name: "JetBrains Mono", data: monoLat, weight: 500 },
     ];
   } catch {
-    try {
-      const fallback = await readFile(
-        join(process.cwd(), "node_modules/next/dist/compiled/@vercel/og/noto-sans-v27-latin-regular.ttf"),
-      );
-      fonts = [{ name: "Noto Sans", data: fallback, weight: 400 }];
-    } catch {
-      fonts = [];
-    }
+    fonts = [];
   }
 
   const displayFamily = fonts.some((font) => font.name === "Unbounded")
     ? "Unbounded"
-    : fonts[0]?.name ?? "sans-serif";
+    : "sans-serif";
   const monoFamily = fonts.some((font) => font.name === "JetBrains Mono")
     ? "JetBrains Mono"
-    : fonts[0]?.name ?? "monospace";
+    : "monospace";
 
   return new ImageResponse(
     (

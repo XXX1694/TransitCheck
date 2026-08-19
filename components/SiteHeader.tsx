@@ -12,9 +12,9 @@ export function SiteHeader() {
           </Link>
         </div>
         <nav className="site-header__nav" aria-label="Разделы">
-          <a href="/#how">Как работает</a>
-          <a href="/#report">Пример отчёта</a>
-          <a href="/#price">Цена</a>
+          <Link href="/#how">Как работает</Link>
+          <Link href="/#report">Пример отчёта</Link>
+          <Link href="/#price">Цена</Link>
         </nav>
         <CheckCta className="btn btn--ghost site-header__cta">Заказать</CheckCta>
       </div>

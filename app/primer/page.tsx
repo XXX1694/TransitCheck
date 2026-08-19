@@ -6,7 +6,10 @@ import { SAMPLE_ID, SAMPLE_ROUTE } from "@/lib/sample";
 export const metadata: Metadata = {
   title: `Пример отчёта ${SAMPLE_ID}`,
   description: `Полный пример разбора ${SAMPLE_ROUTE.display} для паспорта KAZ — страницы PDF в потоке и файл для скачивания.`,
-};
+  alternates: {
+    canonical: "/primer",
+  },
+}
 
 export default function PrimerPage() {
   return (

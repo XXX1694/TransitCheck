@@ -695,7 +695,7 @@ a {
   margin: 1.2rem 0 0.5rem;
   font-size: var(--type-20);
   font-family: var(--font-unbounded), "Unbounded", sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -942,7 +942,7 @@ a {
   margin: 0;
   font-family: var(--font-unbounded), "Unbounded", sans-serif;
   font-size: var(--type-20);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -979,18 +979,6 @@ a {
   font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
   font-size: var(--type-13);
   color: var(--ink-600);
-}
-
-.receipt-barcode {
-  height: 2.1rem;
-  margin-top: 0.85rem;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--ink-900) 0 2px,
-    transparent 2px 5px,
-    var(--ink-900) 5px 6px,
-    transparent 6px 9px
-  );
 }
 
 .faq {

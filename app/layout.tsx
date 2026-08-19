@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteUrl } from "@/lib/site";
@@ -12,6 +12,14 @@ const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
 });
 
+const ibmSerif = IBM_Plex_Serif({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-ibm-serif",
+});
+
 const ibmMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -19,19 +27,12 @@ const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
 });
 
-const archivo = Archivo({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-archivo",
-  axes: ["wdth"],
-});
-
 const title = "TransitCheck — Find out if they'll let you board";
 const description =
   "Airlines refuse boarding over transit rules most travellers never hear about. Send your route and passport — a dated human check within 24 hours. $12 per route.";
 
 export const viewport: Viewport = {
-  themeColor: "#f2f3f0",
+  themeColor: "#f4efe4",
   width: "device-width",
   initialScale: 1,
 };
@@ -82,7 +83,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmSans.variable} ${ibmMono.variable} ${archivo.variable}`}
+      className={`${ibmSans.variable} ${ibmSerif.variable} ${ibmMono.variable}`}
     >
       <body className="font-sans antialiased">
         <a className="skip-link" href="#main">

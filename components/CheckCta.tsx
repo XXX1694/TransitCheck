@@ -1,9 +1,11 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 type CheckCtaProps = {
   className?: string;
+  children?: ReactNode;
 };
 
 function trackCtaClick() {
@@ -12,10 +14,13 @@ function trackCtaClick() {
   }
 }
 
-export function CheckCta({ className }: CheckCtaProps) {
+export function CheckCta({
+  className,
+  children = "Check my route — $12",
+}: CheckCtaProps) {
   return (
     <Link href="/#order" className={className} onClick={trackCtaClick}>
-      Check my route — $12
+      {children}
     </Link>
   );
 }

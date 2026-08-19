@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TC-2026-0412 · ALA→SIN→KUL · пример отчёта</title>
+    <style>
+      :root {
+        --paper-0: #f4f4ee;
+        --paper-1: #e8e8df;
+        --paper-line: #d3d3c6;
+        --ink-900: #101b2d;
+        --ink-600: #40506b;
+        --stamp-red: #a32e2e;
+        --stamp-green: #2e6b4f;
+        --stamp-blue: #2b4ea8;
+      }
+      body {
+        margin: 0;
+        background: var(--paper-0);
+        color: var(--ink-900);
+        font: 17px/1.5 system-ui, sans-serif;
+      }
+      main {
+        width: min(44rem, calc(100% - 2rem));
+        margin: 1.5rem auto 3rem;
+      }
+      header,
+      section {
+        border-bottom: 1px solid var(--paper-line);
+        padding: 0.9rem 0;
+      }
+      .mono {
+        font-family: ui-monospace, monospace;
+        font-size: 13px;
+        color: var(--ink-600);
+      }
+      h1 {
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin: 0.3rem 0 0.6rem;
+      }
+      h2 {
+        font-size: 20px;
+        margin: 1.2rem 0 0.4rem;
+      }
+      .strip {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+      }
+      .stub {
+        min-width: 8rem;
+        border: 1px solid var(--paper-line);
+        border-radius: 4px;
+        padding: 0.6rem;
+        background: var(--paper-0);
+      }
+      .stub.lay {
+        background: var(--paper-1);
+      }
+      .stamp {
+        display: inline-block;
+        margin-top: 0.4rem;
+        border: 2px solid var(--stamp-red);
+        color: var(--stamp-red);
+        padding: 0.2rem 0.35rem;
+        font-size: 13px;
+        text-transform: uppercase;
+        transform: rotate(-2deg);
+      }
+      .ok {
+        color: var(--stamp-green);
+        border: 1px solid var(--stamp-green);
+        border-radius: 2px;
+        padding: 0.1rem 0.35rem;
+        font-family: ui-monospace, monospace;
+        font-size: 13px;
+      }
+      .bad {
+        color: var(--stamp-red);
+        border: 1px solid var(--stamp-red);
+        border-radius: 2px;
+        padding: 0.1rem 0.35rem;
+        font-family: ui-monospace, monospace;
+        font-size: 13px;
+      }
+      a {
+        color: var(--stamp-blue);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="mono">TC-2026-0412 · проверено 12.04.2026 14:32 ALMT · стр. 1/2</p>
+        <h1>ALA→SIN→KUL</h1>
+        <p>Паспорт KAZ · живу в KAZ · отдельные билеты · стыковка SIN 9ч</p>
+        <div class="strip">
+          <div class="stub">
+            <p class="mono">рейс</p>
+            <p>ALA→SIN</p>
+            <p class="mono">28.04.26 · KC 129</p>
+          </div>
+          <div class="stub lay">
+            <p class="mono">стыковка</p>
+            <p>SIN 9ч</p>
+            <p class="mono">отд. билеты</p>
+            <p class="stamp">Виза нужна</p>
+          </div>
+          <div class="stub">
+            <p class="mono">рейс</p>
+            <p>SIN→KUL</p>
+            <p class="mono">29.04.26 · MH 609</p>
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <p><span class="ok">ALA→SIN · посадка по паспорту KAZ</span></p>
+        <p>
+          Для этого плеча отдельный документ не нужен. Риск на стойке в ALA — не
+          вылет в Малайзию, а допуск в Сингапур на следующем плече.
+        </p>
+      </section>
+      <section>
+        <p>
+          <span class="bad"
+            >SIN 9ч · виза Сингапура — если выходите из транзитной зоны</span
+          >
+        </p>
+        <p>
+          На отдельных билетах багаж забираете и сдаёте снова: это вход в
+          Сингапур. Безвизовый транзит 96 часов (VFTF) для паспорта KAZ действует
+          только при действующей визе или ВНЖ Австралии, Канады, Германии,
+          Японии, Новой Зеландии, Швейцарии, Великобритании или США. Иначе виза
+          ICA до вылета из Алматы. На одном билете без выхода из зоны —
+          транзитная виза не нужна.
+        </p>
+      </section>
+      <section>
+        <p><span class="ok">SIN→KUL · краткий въезд без визы</span></p>
+        <p>
+          Конечная страна здесь не ловушка. Паспорт KAZ на короткий визит в
+          Малайзию проходит без предварительной визы — при сроке паспорта и
+          обратном билете.
+        </p>
+      </section>
+
+      <section>
+        <p class="mono">TC-2026-0412 · стр. 2/2 · условия и источники</p>
+        <h2>Условия стыковки</h2>
+        <p>
+          <strong>Без выхода из терминала.</strong> Виза не нужна, если билет
+          один и вы не покидаете транзитную зону Чанги.
+        </p>
+        <p>
+          <strong>Смена терминала.</strong> В Чанги indoor-переход обычно
+          airside. Если агент пишет landside — считаем как вход.
+        </p>
+        <p>
+          <strong>Смена аэропорта.</strong> На этом маршруте нет. DXB–DWC,
+          IST–SAW, PEK–PKX — всегда вход в страну.
+        </p>
+        <p>
+          <strong>Отдельные билеты.</strong> Да. Багаж не сквозной — выход к
+          ленте, паспортный контроль, новая регистрация.
+        </p>
+        <p>
+          <strong>Получение багажа.</strong> Да, на стыковке в SIN. Это причина
+          красного штампа.
+        </p>
+        <h2>Источники</h2>
+        <p>
+          S1 · 12.04.2026 14:18 ·
+          <a
+            href="https://www.ica.gov.sg/enter-transit-depart/entering-singapore/visa-free-transit-facility"
+            >ICA — Visa-Free Transit Facility</a
+          >
+        </p>
+        <p>
+          S2 · 12.04.2026 14:21 ·
+          <a
+            href="https://www.ica.gov.sg/enter-transit-depart/entering-singapore/visa-requirements"
+            >ICA — Visa requirements</a
+          >
+        </p>
+        <p>
+          S3 · 12.04.2026 14:26 ·
+          <a href="https://www.imi.gov.my/">Immigration Department of Malaysia</a>
+        </p>
+        <p>
+          S4 · 12.04.2026 14:29 ·
+          <a href="https://www.iatatravelcentre.com/">IATA Travel Centre</a>
+        </p>
+        <p class="mono">
+          Пример, не ваш разбор. Дата и время на вашем PDF будут своими.
+          Окончательное решение — у перевозчика и пограничной службы.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

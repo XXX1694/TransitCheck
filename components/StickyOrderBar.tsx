@@ -2,42 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { CheckCta } from "@/components/CheckCta";
+import { PRICE_USD, SLA_HOURS } from "@/lib/site";
 
 export function StickyOrderBar() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const heroCta = document.getElementById("hero-cta");
     const order = document.getElementById("order");
-    if (!heroCta || !order) {
+    if (!order) {
       return;
     }
 
-    let heroInView = true;
-    let orderInView = false;
-
-    const update = () => {
-      setVisible(!heroInView && !orderInView);
-    };
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.target.id === "hero-cta") {
-            heroInView = entry.isIntersecting;
-          }
-          if (entry.target.id === "order") {
-            orderInView = entry.isIntersecting;
-          }
-        }
-        update();
+      ([entry]) => {
+        setVisible(!entry.isIntersecting);
       },
-      { threshold: 0.14 },
+      { threshold: 0.12 },
     );
 
-    observer.observe(heroCta);
     observer.observe(order);
-
     return () => observer.disconnect();
   }, []);
 
@@ -45,13 +28,15 @@ export function StickyOrderBar() {
     <div
       className={visible ? "sticky-bar is-visible" : "sticky-bar"}
       role="region"
-      aria-label="Check a route"
+      aria-label="Заказать разбор"
       aria-hidden={!visible}
       hidden={!visible}
     >
-      <p className="sticky-bar__copy">$12 · 24 hours</p>
+      <p className="sticky-bar__copy mono">
+        ${PRICE_USD} · {SLA_HOURS}ч
+      </p>
       <CheckCta className="btn btn--solid sticky-bar__cta">
-        Send my route
+        Заказать разбор — ${PRICE_USD}
       </CheckCta>
     </div>
   );

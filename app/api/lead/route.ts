@@ -12,13 +12,14 @@ export async function POST(request: Request) {
       body = {
         email: form.get("email"),
         passportCountry: form.get("passportCountry"),
+        residenceCountry: form.get("residenceCountry"),
         route: form.get("route"),
         travelDates: form.get("travelDates"),
         ticketType: form.get("ticketType"),
       };
     }
   } catch {
-    return jsonError("Could not read the request.", 400);
+    return jsonError("Запрос не прочитался. Отправьте форму ещё раз.", 400);
   }
 
   const parsed = parseLead(body);
@@ -50,11 +51,11 @@ export async function POST(request: Request) {
           webhookResponse.status,
           await webhookResponse.text().catch(() => ""),
         );
-        return jsonError("Could not deliver the route. Try again.", 502);
+        return jsonError("Заказ не дошёл. Отправьте ещё раз через минуту.", 502);
       }
     } catch (error) {
       console.error("Lead webhook error:", error);
-      return jsonError("Could not deliver the route. Try again.", 502);
+      return jsonError("Заказ не дошёл. Отправьте ещё раз через минуту.", 502);
     }
   }
 

@@ -1,38 +1,37 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
+import { JetBrains_Mono, Onest, Unbounded } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
-const ibmSans = IBM_Plex_Sans({
-  subsets: ["latin"],
+const unbounded = Unbounded({
+  subsets: ["cyrillic", "latin"],
+  weight: ["600", "700"],
+  display: "swap",
+  variable: "--font-unbounded",
+});
+
+const onest = Onest({
+  subsets: ["cyrillic", "latin"],
   weight: ["400", "500"],
   display: "swap",
-  variable: "--font-ibm-sans",
+  variable: "--font-onest",
 });
 
-const ibmSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
+const jetbrains = JetBrains_Mono({
+  subsets: ["cyrillic", "latin"],
+  weight: ["400", "500"],
   display: "swap",
-  variable: "--font-ibm-serif",
+  variable: "--font-jetbrains",
 });
 
-const ibmMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-  variable: "--font-ibm-mono",
-});
-
-const title = "TransitCheck — Find out if they'll let you board";
+const title = "С рейса снимают из-за транзитной визы — TransitCheck";
 const description =
-  "Airlines refuse boarding over transit rules most travellers never hear about. Send your route and passport — a dated human check within 24 hours. $12 per route.";
+  "Платный разбор транзитных требований для одного маршрута. Вердикт по каждому плечу, источники и дата в PDF за 24 часа. $12, разово, для паспортов Казахстана и СНГ.";
 
 export const viewport: Viewport = {
-  themeColor: "#f4efe4",
+  themeColor: "#F4F4EE",
   width: "device-width",
   initialScale: 1,
 };
@@ -46,11 +45,11 @@ export const metadata: Metadata = {
   description,
   applicationName: "TransitCheck",
   keywords: [
-    "transit visa",
-    "layover",
-    "denied boarding",
-    "route check",
-    "passport",
+    "транзитная виза",
+    "стыковка",
+    "снятие с рейса",
+    "паспорт Казахстана",
+    "разбор маршрута",
   ],
   authors: [{ name: "TransitCheck" }],
   alternates: {
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en",
+    locale: "ru_KZ",
     siteName: "TransitCheck",
     title,
     description,
@@ -82,12 +81,12 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${ibmSans.variable} ${ibmSerif.variable} ${ibmMono.variable}`}
+      lang="ru"
+      className={`${unbounded.variable} ${onest.variable} ${jetbrains.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body>
         <a className="skip-link" href="#main">
-          Skip to content
+          К содержанию
         </a>
         <SiteHeader />
         {children}

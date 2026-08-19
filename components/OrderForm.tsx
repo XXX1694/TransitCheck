@@ -104,7 +104,7 @@ export function OrderForm() {
       <div className="field">
         <label htmlFor="travelDates">
           Approximate travel dates{" "}
-          <span className="field__optional">optional</span>
+          <span className="field__optional">(optional)</span>
         </label>
         <input
           id="travelDates"

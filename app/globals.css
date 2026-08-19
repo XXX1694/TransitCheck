@@ -25,6 +25,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.75rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -92,7 +93,7 @@ a {
 
 .wordmark {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   font-weight: 600;
   letter-spacing: -0.03em;
   text-decoration: none;
@@ -154,6 +155,10 @@ a {
   text-decoration: none;
   text-align: center;
   cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
 }
 
 .btn:hover {
@@ -167,8 +172,8 @@ a {
 }
 
 .btn--solid:hover {
-  background: var(--color-stamp);
-  border-color: var(--color-stamp);
+  background: #2e2923;
+  border-color: #2e2923;
   color: var(--color-paper);
 }
 
@@ -479,7 +484,9 @@ a {
 }
 
 .order__aside {
-  padding-top: 0.2rem;
+  order: -1;
+  padding: 0 0 0.4rem;
+  border-bottom: 1px solid var(--color-rule);
 }
 
 .order__aside h3 {
@@ -528,6 +535,10 @@ a {
   display: none;
 }
 
+.faq summary::-moz-list-bullet {
+  list-style-type: none;
+}
+
 .faq summary::after {
   content: "+";
   position: absolute;
@@ -542,8 +553,10 @@ a {
   content: "–";
 }
 
-.faq summary:hover {
-  color: var(--color-stamp);
+.faq summary:hover,
+.faq summary:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .faq p {
@@ -685,7 +698,7 @@ a {
 
 .site-footer__legal {
   color: var(--color-muted);
-  font-size: 0.86rem;
+  font-size: 0.92rem;
 }
 
 .thanks {
@@ -718,8 +731,10 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .route-strip__pass {
+  .route-strip__pass,
+  .btn {
     animation: none;
+    transition: none;
   }
 
   .site-header {
@@ -729,6 +744,14 @@ a {
 }
 
 @media (max-width: 719px) {
+  .site-header__meta {
+    display: none;
+  }
+
+  .site-header__cta {
+    grid-row: 1;
+  }
+
   .order-form .btn[type="submit"] {
     width: 100%;
   }
@@ -900,9 +923,6 @@ a {
     gap: 2.75rem;
   }
 
-  .radios {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 }
 
 @media (min-width: 900px) {
@@ -913,7 +933,15 @@ a {
   }
 
   .order__aside {
+    order: 0;
     position: sticky;
     top: 5.5rem;
+    padding: 0.15rem 0 0 1.35rem;
+    border-bottom: 0;
+    border-left: 2px solid var(--color-ink);
+  }
+
+  .radios {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }

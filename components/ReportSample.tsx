@@ -32,7 +32,8 @@ export function ReportSample() {
       </header>
       <h3 className="report__route">ALA → DXB → BKK</h3>
       <p className="report__sub">
-        Kazakhstan passport · one ticket · 9 hours in Dubai
+        Kazakhstan passport · one ticket · 9 hours in Dubai. We checked official
+        sources dated 12 Aug 2026.
       </p>
       <ol className="report__legs">
         {LEGS.map((leg) => (

@@ -68,8 +68,8 @@ export default function Home() {
               The report looks like this
             </h2>
             <p>
-              Not a chatbot summary. A human check, written so you can verify
-              every line.
+              A person checks the route and writes it so you can verify every
+              line.
             </p>
             <ul className="plain-list">
               {DELIVERABLES.map((item) => (

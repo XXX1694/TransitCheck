@@ -49,7 +49,7 @@ export function StickyOrderBar() {
       aria-hidden={!visible}
       hidden={!visible}
     >
-      <p className="sticky-bar__copy">$12 · answer in 24 hours</p>
+      <p className="sticky-bar__copy">$12 · 24 hours</p>
       <CheckCta className="btn btn--solid sticky-bar__cta">
         Send my route
       </CheckCta>

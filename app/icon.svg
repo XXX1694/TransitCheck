@@ -1,6 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="TransitCheck">
-  <rect width="32" height="32" fill="#1c1914"/>
-  <rect x="5" y="8" width="22" height="16" fill="none" stroke="#f4efe4" stroke-width="1"/>
-  <path d="M19 8v16" fill="none" stroke="#f4efe4" stroke-width="1" stroke-dasharray="1.5 1.5"/>
-  <text x="8" y="18" fill="#f4efe4" font-family="ui-serif, Georgia, serif" font-size="7" font-weight="600">TC</text>
+  <rect width="32" height="32" fill="#F4F4EE"/>
+  <rect x="3" y="7" width="12" height="18" fill="none" stroke="#101B2D" stroke-width="1"/>
+  <rect x="17" y="7" width="12" height="18" fill="#E8E8DF" stroke="#101B2D" stroke-width="1"/>
+  <path d="M16 8v16" fill="none" stroke="#D3D3C6" stroke-width="1" stroke-dasharray="1.2 1.6"/>
+  <circle cx="16" cy="7" r="1.4" fill="#F4F4EE" stroke="#D3D3C6"/>
+  <circle cx="16" cy="25" r="1.4" fill="#F4F4EE" stroke="#D3D3C6"/>
+  <text x="5" y="18" fill="#101B2D" font-family="ui-monospace, monospace" font-size="6">ALA</text>
+  <text x="19.2" y="15" fill="#101B2D" font-family="ui-monospace, monospace" font-size="6">SIN</text>
+  <rect x="19" y="17.5" width="8" height="5" fill="none" stroke="#A32E2E" stroke-width="1" transform="rotate(-2 23 20)"/>
 </svg>

@@ -1,14 +1,19 @@
-export const PASSPORT_COUNTRIES = [
-  "Kazakhstan",
-  "Uzbekistan",
-  "Kyrgyzstan",
-  "India",
-  "Pakistan",
-  "Bangladesh",
-  "Philippines",
-  "Indonesia",
-  "Other",
+export const COUNTRY_OPTIONS = [
+  { value: "Kazakhstan", iso: "KAZ", label: "Казахстан" },
+  { value: "Uzbekistan", iso: "UZB", label: "Узбекистан" },
+  { value: "Kyrgyzstan", iso: "KGZ", label: "Кыргызстан" },
+  { value: "Tajikistan", iso: "TJK", label: "Таджикистан" },
+  { value: "Turkmenistan", iso: "TKM", label: "Туркменистан" },
+  { value: "Russia", iso: "RUS", label: "Россия" },
+  { value: "India", iso: "IND", label: "Индия" },
+  { value: "Pakistan", iso: "PAK", label: "Пакистан" },
+  { value: "Bangladesh", iso: "BGD", label: "Бангладеш" },
+  { value: "Philippines", iso: "PHL", label: "Филиппины" },
+  { value: "Indonesia", iso: "IDN", label: "Индонезия" },
+  { value: "Other", iso: "XXX", label: "Другая" },
 ] as const;
+
+export const PASSPORT_COUNTRIES = COUNTRY_OPTIONS.map((item) => item.value);
 
 export const TICKET_TYPES = [
   "one_ticket",
@@ -16,12 +21,13 @@ export const TICKET_TYPES = [
   "not_sure",
 ] as const;
 
-export type PassportCountry = (typeof PASSPORT_COUNTRIES)[number];
+export type PassportCountry = (typeof COUNTRY_OPTIONS)[number]["value"];
 export type TicketType = (typeof TICKET_TYPES)[number];
 
 export type LeadPayload = {
   email: string;
   passportCountry: PassportCountry;
+  residenceCountry: PassportCountry;
   route: string;
   travelDates: string;
   ticketType: TicketType;
@@ -55,37 +61,56 @@ function isTicketType(value: string): value is TicketType {
 export function parseLead(body: unknown): LeadParseResult {
   const record = asRecord(body);
   if (!record) {
-    return { ok: false, error: "Send a JSON object." };
+    return { ok: false, error: "Пришлите поля формы обычным запросом." };
   }
 
   const email = readString(record.email);
   const passportCountry = readString(record.passportCountry);
+  const residenceCountry = readString(record.residenceCountry);
   const route = readString(record.route);
   const travelDates = readString(record.travelDates);
   const ticketType = readString(record.ticketType);
 
   if (!email) {
-    return { ok: false, error: "Email address is required." };
+    return { ok: false, error: "Укажите почту — на неё придёт PDF." };
   }
   if (email.length > 254 || !EMAIL_PATTERN.test(email)) {
-    return { ok: false, error: "Enter a valid email address." };
+    return {
+      ok: false,
+      error: "В почте нет «@» или домена — проверьте адрес.",
+    };
   }
   if (!passportCountry || !isPassportCountry(passportCountry)) {
-    return { ok: false, error: "Select a passport country." };
+    return { ok: false, error: "Выберите гражданство из списка." };
+  }
+  if (!residenceCountry || !isPassportCountry(residenceCountry)) {
+    return { ok: false, error: "Выберите страну проживания из списка." };
   }
   if (!route) {
-    return { ok: false, error: "Route is required." };
+    return {
+      ok: false,
+      error: "Впишите аэропорты пересадки — разберём каждое плечо.",
+    };
   }
   if (route.length > 200) {
-    return { ok: false, error: "Route is too long." };
+    return {
+      ok: false,
+      error: "Маршрут длиннее 200 знаков — оставьте коды аэропортов и даты.",
+    };
+  }
+  if (!travelDates) {
+    return {
+      ok: false,
+      error: "Укажите дату вылета — от неё считается срок в 4 дня.",
+    };
   }
   if (travelDates.length > 120) {
-    return { ok: false, error: "Travel dates are too long." };
+    return { ok: false, error: "Дата вылета длиннее 120 знаков — сократите." };
   }
   if (!ticketType || !isTicketType(ticketType)) {
     return {
       ok: false,
-      error: "Say whether the flights are on one ticket or separate bookings.",
+      error: "Отметьте билеты: один, отдельные или «не знаю».",
     };
   }
 
@@ -94,6 +119,7 @@ export function parseLead(body: unknown): LeadParseResult {
     data: {
       email,
       passportCountry,
+      residenceCountry,
       route,
       travelDates,
       ticketType,

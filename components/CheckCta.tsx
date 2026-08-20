@@ -16,7 +16,7 @@ function trackCtaClick() {
 
 export function CheckCta({
   className,
-  children = "Check my route — $12",
+  children = "Заказать разбор — $12",
 }: CheckCtaProps) {
   return (
     <Link href="/#order" className={className} onClick={trackCtaClick}>

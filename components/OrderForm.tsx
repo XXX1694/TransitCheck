@@ -1,13 +1,62 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { PASSPORT_COUNTRIES } from "@/lib/lead";
+import { useMemo, useState, type FormEvent } from "react";
+import { SlaClock } from "@/components/SlaClock";
+import { COUNTRY_OPTIONS } from "@/lib/lead";
+import { AVG_HOURS, MIN_ORDER_DAYS, PRICE_USD, SLA_HOURS } from "@/lib/site";
+
+function parseDeparture(value: string): Date | null {
+  const trimmed = value.trim();
+  const dotted = trimmed.match(/^(\d{1,2})[.](\d{1,2})[.](\d{2}|\d{4})$/);
+  if (dotted) {
+    const day = Number(dotted[1]);
+    const month = Number(dotted[2]) - 1;
+    const yearRaw = Number(dotted[3]);
+    const year = yearRaw < 100 ? 2000 + yearRaw : yearRaw;
+    const date = new Date(year, month, day);
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() === month &&
+      date.getDate() === day
+    ) {
+      return date;
+    }
+  }
+  return null;
+}
+
+function daysUntil(date: Date): number {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}
 
 export function OrderForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [dates, setDates] = useState("");
+
+  const deadlineNote = useMemo(() => {
+    const parsed = parseDeparture(dates);
+    if (!parsed) {
+      return "";
+    }
+    const left = daysUntil(parsed);
+    if (left < 0) {
+      return "Дата вылета уже прошла — укажите будущую, иначе разберём как архивный маршрут.";
+    }
+    if (left < 2) {
+      return `До вылета меньше 48 часов. Отчёт успеем, визу после него — нет. Пишем, берём ли заказ, до оплаты.`;
+    }
+    if (left < MIN_ORDER_DAYS) {
+      return `До вылета ${left} дн. Отчёт за ${SLA_HOURS} ч успеем. Если по нему нужна виза — на подачу уже тесно.`;
+    }
+    return "";
+  }, [dates]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,6 +76,7 @@ export function OrderForm() {
         body: JSON.stringify({
           email: data.get("email"),
           passportCountry: data.get("passportCountry"),
+          residenceCountry: data.get("residenceCountry"),
           route: data.get("route"),
           travelDates: data.get("travelDates"),
           ticketType: data.get("ticketType"),
@@ -39,148 +89,160 @@ export function OrderForm() {
       };
 
       if (!response.ok || !result.ok) {
-        setError(result.error ?? "Could not send the route. Try again.");
+        setError(result.error ?? "Запрос не ушёл. Проверьте сеть и отправьте ещё раз.");
         setPending(false);
         return;
       }
 
       router.push("/thanks");
     } catch {
-      setError("Could not send the route. Try again.");
+      setError("Запрос не ушёл. Проверьте сеть и отправьте ещё раз.");
       setPending(false);
     }
   }
 
   return (
-    <form
-      className="order-form"
-      action="/api/lead"
-      method="post"
-      onSubmit={handleSubmit}
-      aria-busy={pending}
-    >
-      <div className="field">
-        <label htmlFor="route">Route</label>
-        <input
-          id="route"
-          name="route"
-          type="text"
-          placeholder="ALA → DXB → BKK"
-          required
-          maxLength={200}
-          autoComplete="off"
-          spellCheck={false}
-          aria-describedby="route-hint"
-        />
-        <p className="field__hint" id="route-hint">
-          Cities or airport codes, in order. Include every layover.
+    <div className="desk-form" id="order">
+      <div className="desk-form__head">
+        <p className="desk-form__title">Разбор маршрута</p>
+        <p className="desk-form__meta">
+          ALA <SlaClock />
         </p>
       </div>
 
-      <div className="field">
-        <label htmlFor="passportCountry">Passport country</label>
-        <select
-          id="passportCountry"
-          name="passportCountry"
-          required
-          defaultValue=""
-          aria-describedby="passport-hint"
-        >
-          <option value="" disabled>
-            Select a country
-          </option>
-          {PASSPORT_COUNTRIES.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
-        <p className="field__hint" id="passport-hint">
-          If you pick Other, we&apos;ll say whether we can check it before you
-          pay.
-        </p>
-      </div>
+      <ul className="margin-list">
+        <li>
+          <span>срок ответа</span>
+          <strong>{SLA_HOURS}ч / ср. {AVG_HOURS}ч</strong>
+        </li>
+        <li>
+          <span>заказ</span>
+          <strong>мин. {MIN_ORDER_DAYS} дн. до вылета</strong>
+        </li>
+      </ul>
 
-      <div className="field">
-        <label htmlFor="travelDates">
-          Approximate travel dates{" "}
-          <span className="field__optional">(optional)</span>
-        </label>
-        <input
-          id="travelDates"
-          name="travelDates"
-          type="text"
-          maxLength={120}
-          autoComplete="off"
-          placeholder="12–18 October"
-          aria-describedby="dates-hint"
-        />
-        <p className="field__hint" id="dates-hint">
-          Month is enough. Rules can depend on when you fly.
-        </p>
-      </div>
-
-      <fieldset className="field field--radios" aria-describedby="ticket-hint">
-        <legend>Tickets</legend>
-        <p className="field__hint" id="ticket-hint">
-          Separate bookings often mean you clear immigration to re-check bags.
-        </p>
-        <div className="radios" role="presentation">
-          <label className="radio">
-            <input type="radio" name="ticketType" value="one_ticket" required />
-            <span>
-              <strong>One ticket</strong>
-              Through-checked bags
-            </span>
-          </label>
-          <label className="radio">
-            <input type="radio" name="ticketType" value="separate_tickets" />
-            <span>
-              <strong>Separate tickets</strong>
-              Collect and re-check
-            </span>
-          </label>
-          <label className="radio">
-            <input type="radio" name="ticketType" value="not_sure" />
-            <span>
-              <strong>Not sure</strong>
-              We&apos;ll treat it as the safer case
-            </span>
-          </label>
+      <form
+        className="order-form"
+        action="/api/lead"
+        method="post"
+        onSubmit={handleSubmit}
+        aria-busy={pending}
+      >
+        <div className="field__row">
+          <div className="field">
+            <label htmlFor="passportCountry">Паспорт</label>
+            <select
+              id="passportCountry"
+              name="passportCountry"
+              required
+              defaultValue="Kazakhstan"
+            >
+              {COUNTRY_OPTIONS.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.iso} · {country.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="residenceCountry">Живу в</label>
+            <select
+              id="residenceCountry"
+              name="residenceCountry"
+              required
+              defaultValue="Kazakhstan"
+            >
+              {COUNTRY_OPTIONS.map((country) => (
+                <option key={`res-${country.value}`} value={country.value}>
+                  {country.iso} · {country.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </fieldset>
 
-      <div className="field">
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          inputMode="email"
-          required
-          maxLength={254}
-          aria-describedby="email-hint"
-        />
-        <p className="field__hint" id="email-hint">
-          Payment link and the PDF both go here. Check spam if it&apos;s a new
-          sender.
+        <div className="field">
+          <label htmlFor="route">Маршрут</label>
+          <input
+            id="route"
+            name="route"
+            type="text"
+            placeholder="Впишите аэропорты пересадки — разберём каждое плечо"
+            required
+            maxLength={200}
+            autoComplete="off"
+            spellCheck={false}
+            aria-describedby="route-hint"
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="travelDates">Дата вылета</label>
+          <input
+            id="travelDates"
+            name="travelDates"
+            type="text"
+            required
+            maxLength={120}
+            autoComplete="off"
+            placeholder="28.04.26"
+            value={dates}
+            onChange={(event) => setDates(event.target.value)}
+            aria-describedby="dates-hint"
+          />
+        </div>
+
+        <fieldset className="field field--radios">
+          <legend>Билеты</legend>
+          <div className="radios">
+            <label className="radio">
+              <input type="radio" name="ticketType" value="one_ticket" required />
+              <span>один</span>
+            </label>
+            <label className="radio">
+              <input type="radio" name="ticketType" value="separate_tickets" />
+              <span>отдельные</span>
+            </label>
+            <label className="radio">
+              <input type="radio" name="ticketType" value="not_sure" />
+              <span>не знаю</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div className="field">
+          <label htmlFor="email">Почта</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            inputMode="email"
+            required
+            maxLength={254}
+          />
+        </div>
+
+        {deadlineNote ? (
+          <p className="form-warn" role="status">
+            {deadlineNote}
+          </p>
+        ) : null}
+
+        {error ? (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        ) : null}
+
+        <button className="btn btn--solid btn--full" type="submit" disabled={pending}>
+          {pending ? "Отправляем заказ…" : `Заказать разбор — $${PRICE_USD}`}
+        </button>
+        <p className="form-note">
+          Ответ за {SLA_HOURS} ч, в среднем за {AVG_HOURS}. Придёт PDF. Экспресса нет —
+          если вылет раньше чем через 48 часов, напишите дату: скажем, берём ли заказ.
         </p>
-      </div>
-
-      {error ? (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
-      ) : null}
-
-      <button className="btn btn--solid" type="submit" disabled={pending}>
-        {pending ? "Sending…" : "Send my route"}
-      </button>
-      <p className="form-note">
-        No charge yet. We email a payment link if we can check the route. Full
-        refund if we can&apos;t send an answer.
-      </p>
-    </form>
+      </form>
+    </div>
   );
 }

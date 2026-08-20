@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AVG_HOURS, PRICE_USD, SLA_HOURS } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Got it",
-  description:
-    "We'll email a payment link and your answer within 24 hours. Check spam if you don't see it.",
+  title: "Заказ принят",
+  description: `Заказ принят. Если маршрут можем разобрать — пришлём ссылку на оплату. PDF — за ${SLA_HOURS} часа.`,
   robots: {
     index: false,
     follow: false,
@@ -14,20 +14,23 @@ export const metadata: Metadata = {
 export default function ThanksPage() {
   return (
     <main id="main" className="thanks">
-      <div className="wrap">
-        <h1 className="display">Got it.</h1>
-        <p>
-          Next email is a payment link if we can check the route — or a note if
-          we can&apos;t, in which case you pay nothing. After you pay, the PDF
-          arrives within 24 hours.
-        </p>
-        <p>
-          Check spam if you don&apos;t see it. The first email from a new sender
-          often lands there.
-        </p>
-        <Link className="btn btn--ghost" href="/">
-          Back to TransitCheck
-        </Link>
+      <div className="frame">
+        <div className="thanks__main">
+          <p className="eyebrow">Письмо · заказ принят</p>
+          <h1 className="display">Заказ принят</h1>
+          <p>
+            Следующее письмо — ссылка на оплату ${PRICE_USD}, если маршрут нам
+            по силам. Если нет — напишем, почему, и платить не нужно. После
+            оплаты PDF придёт за {SLA_HOURS} часа, чаще за {AVG_HOURS}.
+          </p>
+          <p>
+            Если письма нет — откройте спам. Первое письмо с нового адреса часто
+            падает туда.
+          </p>
+          <Link className="btn btn--ghost" href="/">
+            На главную
+          </Link>
+        </div>
       </div>
     </main>
   );
